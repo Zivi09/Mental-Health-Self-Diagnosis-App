@@ -1,14 +1,12 @@
 import tkinter as tk
-from tkinter import ttk
-from tkinter import messagebox,simpledialog,Menu
-from tkinter import Canvas, PhotoImage
-from PIL import Image, ImageTk
+from tkinter import messagebox
 import re  
 import sqlite3
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import os
 from tkinter import scrolledtext
+from tkinter import PhotoImage
 
 
 class MentalHealthDiagnosisApp:
@@ -46,7 +44,7 @@ class MentalHealthDiagnosisApp:
         header_label.pack(pady=20)
 
         # Styling
-        font_style = ("Arial", 12)
+        font_style = ("Arial", 18)
 
         # Left side (Form)
         left_frame = tk.Frame(master)
@@ -81,7 +79,7 @@ class MentalHealthDiagnosisApp:
         right_frame = tk.Frame(master, bg="#f5f5dc")
         right_frame.pack(side="right", padx=10, pady=10,expand=True)
 
-        additional_info_label = tk.Label(right_frame, text="What is Mental Health..??",bg="#f5f5dc", font=("Arial", 16, "bold"))
+        additional_info_label = tk.Label(right_frame, text="What is Mental Health..??",bg="#f5f5dc", font=("Arial", 20, "bold"))
         additional_info_label.pack()
 
         additional_info_text = """
@@ -97,169 +95,10 @@ class MentalHealthDiagnosisApp:
 
         additional_info_para = tk.Label(right_frame, text=additional_info_text, font=font_style, bg="Light Pink", wraplength=800, justify="left")
         additional_info_para.pack(pady=10)
+        
         # Initialize database connection
         self.conn = sqlite3.connect('mental_health.db')
         self.create_table_if_not_exists()
-
-        self.create_menu()
-
-        
-    def create_menu(self):
-        # Create a menu
-        menu_bar = Menu(self.master)
-        self.master.config(menu=menu_bar)
-
-        # Create file menu
-        file_menu = Menu(menu_bar, tearoff=0)
-        menu_bar.add_cascade(label="MENU", menu=file_menu)
-        file_menu.add_command(label="Mental fitness", command=self.mental_fitness)
-        file_menu.add_separator()
-        file_menu.add_command(label="q", command=self.master.quit)
-
-        # Create help menu
-        help_menu = Menu(menu_bar, tearoff=0)
-        menu_bar.add_cascade(label="Help", menu=help_menu)
-        help_menu.add_command(label="About", command=self.about)
-        help_menu.add_command(label="Reach Out to Us", command=self.reach_out_to_us)
-
-
-    def mental_fitness(self):
-        def update_left_box(event):
-            selection = combobox.get()
-            if selection == "Option 1":
-                left_text_label.config(text="Information for Option 1")
-            elif selection == "Option 2":
-                left_text_label.config(text="Information for Option 2")
-            elif selection == "Option 3":
-                left_text_label.config(text="Information for Option 3")
-
-        mental_fitness_window = tk.Toplevel(self.master)
-        mental_fitness_window.title("Mental Fitness")
-        mental_fitness_window.geometry("800x400")
-
-        # Left Box
-        left_frame = tk.Frame(mental_fitness_window, bg="#f0f0f0")
-        left_frame.pack(side="left", padx=10, pady=10, fill="both", expand=True)
-
-        left_label = tk.Label(left_frame, text="Left Box", font=("Arial", 14))
-        left_label.pack(pady=10)
-
-        left_text_label = tk.Label(left_frame, text="Initial information", font=("Arial", 12), wraplength=600, justify="left")
-        left_text_label.pack(pady=10)
-
-        # Combobox
-        combobox_values = ["Option 1", "Option 2", "Option 3"]
-        combobox = ttk.Combobox(mental_fitness_window, values=combobox_values)
-        combobox.pack(pady=10)
-        combobox.bind("<<ComboboxSelected>>", update_left_box)
-
-
-
-    def tutorial(self):
-        # Implement the functionality for opening a file
-        pass
-
-    def about(self):
-        # Create a new window for the about page
-        about_window = tk.Toplevel(self.master)
-        about_window.title("About")
-        about_window.geometry("600x400")
-
-        #background color
-        canvas = Canvas(about_window,width=600, height=400)
-        canvas.pack(side="left", fill="both", expand=True)
-
-        img = Image.open("D:/mental_health.1.png")
-        img = ImageTk.PhotoImage(img)
-
-        #scrollbar
-        canvas.create_image(0,0, anchor="nw", image=img)
-
-        scrollbar = tk.Scrollbar(about_window, orient="vertical", command=canvas.yview)
-        scrollbar.pack(side="right", fill="y")
-
-        canvas.configure(yscrollcommand=scrollbar.set)
-
-
-        inner_frame = tk.Frame(canvas, bg="#f0f0f0")
-
-        # Title
-        title_label = tk.Label(inner_frame, text="Know About MHSDT", bg="#f0f0f0", font=("Arial", 16, "bold"))
-        title_label.pack(pady=10)
-
-        # about information
-        about_text = """
-        The Mental Health Self-Diagnosis App is a developing project designed to cater to users of all age groups, aiming to raise awareness and promote proactive mental health management. This application provides a platform for users to assess their mental well-being independently, fostering a culture of self-awareness and self-care.
-
-        Through an intuitive and user-friendly interface, the app guides users through a series of questions and prompts to gather relevant information about their mental health status. By collecting data such as personal background, symptoms, therapy history, and other pertinent details, the app facilitates a comprehensive self-assessment process.
-
-        Utilizing this collected data, the app generates personalized feedback and recommendations tailored to the user's specific needs and circumstances. Whether it's suggesting coping strategies, recommending professional assistance, or providing educational resources, the app strives to empower users with the information and tools necessary to prioritize their mental health.
-
-        Furthermore, the Mental Health Self-Diagnosis App emphasizes inclusivity and accessibility, ensuring that individuals from diverse backgrounds and age groups can benefit from its services. By offering a supportive and non-judgmental environment, the app encourages open dialogue about mental health and reduces the stigma associated with seeking help.
-
-        Overall, this project represents a proactive approach to mental health care, leveraging technology to promote self-awareness, empowerment, and well-being among users of all demographics. Through continuous development and refinement, the Mental Health Self-Diagnosis App aspires to make a meaningful impact in the lives of individuals, fostering a culture of mental wellness and resilience.
-        """
-
-        about_label = tk.Label(inner_frame, text=about_text, bg="#f0f0f0", font=("Arial", 12), wraplength=500, justify="center")
-        about_label.pack(pady=10)
-
-        disclaimer_text = "(The outcomes generated by this tool are currently devoid of professional verification by certified mental health practitioners or medical experts. It is imperative for users to exercise caution and seek professional guidance for accurate diagnosis and treatment recommendations.)"
-        disclaimer_label = tk.Label(inner_frame, text=disclaimer_text, bg="#f0f0f0", font=("Arial", 12,"bold"), wraplength=500, justify="center")
-        disclaimer_label.pack(pady=10)
-
-        #
-        canvas.create_window((0, 0), window=inner_frame, anchor="nw")
-
-        #button to go back to the registration page
-        back_button = tk.Button(about_window, text="Back to Registration", command=about_window.destroy, bg="#007bff", fg="white", font=("Arial", 12), padx=10, pady=5)
-        back_button.pack(pady=10, side="bottom", anchor="center")
-
-        inner_frame.update_idletasks()
-        canvas.config(scrollregion=canvas.bbox("all"))
-        
-    def reach_out_to_us(self):
-        self.contact_window = tk.Toplevel(self.master)
-        self.contact_window.title("Contact Us")
-        self.contact_window.geometry("400x300")
-
-        # Support Email/Phone
-        support_label = tk.Label(self.contact_window, text="For support, please contact us at:", font=("Arial", 12))
-        support_label.pack(pady=10)
-
-        support_info_label = tk.Label(self.contact_window, text="support@example.com\nPhone: 123-456-7890", font=("Arial", 12))
-        support_info_label.pack()
-
-        # Feedback Form
-        feedback_label = tk.Label(self.contact_window, text="Have feedback or suggestions? Let us know!", font=("Arial", 12))
-        feedback_label.pack(pady=10)
-
-        feedback_button = tk.Button(self.contact_window, text="Provide Feedback", command=self.open_feedback_form)
-        feedback_button.pack()
-
-        # FAQ Section
-        faq_label = tk.Label(self.contact_window, text="Questions? Check out our FAQ section:", font=("Arial", 12))
-        faq_label.pack(pady=10)
-
-        faq_button = tk.Button(self.contact_window, text="FAQ", command=self.open_faq)
-        faq_button.pack()
-
-        # Privacy Policy and Terms
-        policy_label = tk.Label(self.contact_window, text="Read our Privacy Policy and Terms of Service:", font=("Arial", 12))
-        policy_label.pack(pady=10)
-
-        policy_button = tk.Button(self.contact_window, text="Privacy Policy", command=self.open_privacy_policy)
-        policy_button.pack()
-
-        # Social Media Links
-        social_label = tk.Label(self.contact_window, text="Connect with us on social media:", font=("Arial", 12))
-        social_label.pack(pady=10)
-
-        facebook_button = tk.Button(self.contact_window, text="Facebook", command=self.open_facebook)
-        facebook_button.pack()
-
-        twitter_button = tk.Button(self.contact_window, text="Twitter", command=self.open_twitter)
-        twitter_button.pack()
-            
 
     def create_table_if_not_exists(self):
         cursor = self.conn.cursor()
@@ -282,31 +121,31 @@ class MentalHealthDiagnosisApp:
         self.conn.commit()
 
     def show_symptoms(self):
-##        # Validation for mandatory fields
-##        if not self.name_entry.get() or not self.age_entry.get() or not self.contact_entry.get() or not self.email_entry.get():
-##            messagebox.showerror("Error", "Please fill in all the required fields.")
-##            return
-##
-##        # Validation for email format
-##        email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-##        if not re.match(email_pattern, self.email_entry.get()):
-##            messagebox.showerror("Error", "Please enter a valid email address.")
-##            return
-##
-##        # Validation for contact number format (for demonstration, assuming a 10-digit number)
-##        contact_pattern = r'^\d{10}$'
-##        if not re.match(contact_pattern, self.contact_entry.get()):
-##            messagebox.showerror("Error", "Please enter a valid 10-digit contact number.")
-##            return
-##        # Validation for age
-##
-##        try:
-##            age = int(self.age_entry.get())
-##            if age < 1 or age > 150:  # Assuming a reasonable age range
-##                raise ValueError
-##        except ValueError:
-##            messagebox.showerror("Error", "Please enter a valid age between 1 and 150.")
-##            return
+        # Validation for mandatory fields
+        if not self.name_entry.get() or not self.age_entry.get() or not self.contact_entry.get() or not self.email_entry.get():
+            messagebox.showerror("Error", "Please fill in all the required fields.")
+            return
+
+        # Validation for email format
+        email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(email_pattern, self.email_entry.get()):
+            messagebox.showerror("Error", "Please enter a valid email address.")
+            return
+
+        # Validation for contact number format (for demonstration, assuming a 10-digit number)
+        contact_pattern = r'^\d{10}$'
+        if not re.match(contact_pattern, self.contact_entry.get()):
+            messagebox.showerror("Error", "Please enter a valid 10-digit contact number.")
+            return
+        # Validation for age
+
+        try:
+            age = int(self.age_entry.get())
+            if age < 1 or age > 150:  # Assuming a reasonable age range
+                raise ValueError
+        except ValueError:
+            messagebox.showerror("Error", "Please enter a valid age between 1 and 150.")
+            return
 
 
 
@@ -325,12 +164,13 @@ class MentalHealthDiagnosisApp:
         second_window.title("Psychiatric History")
 
         second_window.geometry("11500x1500")
-##        self.second_window= tk.PhotoImage(file="D:/mental_health.4.png")
+
+##        self.second_window= tk.PhotoImage(file="D:\mental_health.3.png")
 ##        # Create a Label widget to display the background image
 ##        self.second_window= tk.Label(self.second_window, image=self.second_window)
 ##        self.second_window.place(relwidth=1, relheight=1)  # Set label size to fill the window
 
-        font_style = ("Arial", 12)
+        font_style = ("Arial", 20)
 
         tk.Label(second_window, text="Psychiatric History", font=("Arial", 16, "bold")).pack(pady=10)
         tk.Label(second_window, text="Past Psychiatric History:", font=font_style).pack(anchor="w")
@@ -356,7 +196,7 @@ class MentalHealthDiagnosisApp:
         none_checkbox = tk.Checkbutton(second_window, text="None of the above", variable=self.none_var, font=font_style, command=handle_none_selection)
         none_checkbox.pack(anchor="w")
 
-        next_button = tk.Button(second_window, text="Next", command=self.show_diagnosis)
+        next_button = tk.Button(second_window, text="Next", command=self.show_diagnosis,font=font_style)
         next_button.pack(pady=10)
 
 
@@ -379,6 +219,8 @@ class MentalHealthDiagnosisApp:
         self.symptoms_window = tk.Toplevel(self.master)
         self.symptoms_window.title("Symptoms Checklist")
         self.symptoms_window.geometry("11500x1500")
+
+        font_style = ("Arial", 18)
 
         # Create a canvas
         canvas = tk.Canvas(self.symptoms_window)
@@ -412,9 +254,11 @@ class MentalHealthDiagnosisApp:
                 symptom_frame.grid(row=i, column=column, sticky="w", padx=10, pady=5)
 
                 # Checkbutton
-                check_button = tk.Checkbutton(symptom_frame, text=symptom, variable=var, bg="lightblue")
+                check_button = tk.Checkbutton(symptom_frame, text=symptom, variable=var, bg="lightblue",font=("Arial", 18))
                 check_button.pack(side="left")
 
+                font_style = ("Arial", 18)
+    
 ##                # Scale
 ##                scale = tk.Scale(symptom_frame, from_=0, to=10, orient="horizontal")
 ##                scale.pack(side="left")
@@ -423,7 +267,7 @@ class MentalHealthDiagnosisApp:
         anxiety_symptoms_list = [
             "Churning feeling in your stomach",
             "Feeling light-headed or dizzy",
-            "Pins and needles(sharp pain in the chest like this",
+            "Pins and needles",
             "Feeling restless or unable to sit still",
             "Headaches, backache, or other aches and pains",
             "Faster breathing",
@@ -465,7 +309,7 @@ class MentalHealthDiagnosisApp:
         create_checkbuttons(fomo_symptoms_list, column=2, vars_list=self.fomo_vars)
 
         # Use grid for the submit button
-        submit_button = tk.Button(self.symptoms_window, text="Next", command=self.show_result, bg="blue", fg="white")
+        submit_button = tk.Button(self.symptoms_window, text="Next", command=self.show_result, bg="blue", fg="white",font=font_style)
         submit_button.pack(pady=20)
 
 
@@ -475,7 +319,7 @@ class MentalHealthDiagnosisApp:
         result_window.title("Result Page")
         result_window.geometry("11500x1500")
 
-        tk.Label(result_window, text="Result Page", font=("Arial", 16, "bold")).pack(pady=10)
+        tk.Label(result_window, text="Result Page", font=("Arial", 20, "bold")).pack(pady=10)
 
           # Create a scrolled text widget for displaying the result content
         result_text = scrolledtext.ScrolledText(result_window, wrap=tk.WORD, width=50, height=20)
@@ -551,13 +395,13 @@ class MentalHealthDiagnosisApp:
         self.insert_into_database(result_window)
 
         # Feedback Button
-        feedback_button = tk.Button(result_window, text="Provide Feedback", command=self.open_feedback_form, font=("Arial", 12))
+        feedback_button = tk.Button(result_window, text="Provide Feedback", command=self.open_feedback_form, font=("Arial", 20))
         feedback_button.pack(side="bottom",pady=10)
     def open_feedback_form(self):
         feedback_window = tk.Toplevel(self.master)
         feedback_window.title("Feedback Form")
 
-        tk.Label(feedback_window, text="Please provide your feedback, report issues, or suggest improvements:", font=("Arial", 12)).pack(pady=10)
+        tk.Label(feedback_window, text="Please provide your feedback, report issues, or suggest improvements:", font=("Arial", 20)).pack(pady=10)
 
         feedback_text = tk.Text(feedback_window, height=10, width=50)
         feedback_text.pack(pady=10)
@@ -566,7 +410,7 @@ class MentalHealthDiagnosisApp:
         submit_feedback_button.pack(pady=10)
 
     def submit_feedback(self, feedback):
-        # You can implement the functionality to store feedback in the database or handle it as needed
+        # gotta addd the functionality to store feedback in the database or self email
 ##        print("Feedback submitted:", feedback)
         tk.messagebox.showinfo("Feedback submitted", "Feedback report has been submitted successfully!")
 
@@ -612,13 +456,13 @@ class MentalHealthDiagnosisApp:
                              "High social media activity",
                              "Fast-paced lifestyle",
                              "Concerned about other people’s opinions",
-                             "The urge to be surrounded by others",
+                             "The urge to be surrounded by others"
                              "Poor health behaviours",
                              "Distracted Driving"],
                             self.fomo_vars) if var.get())))
         self.conn.commit()
          #Button to download PDF report
-        download_button = tk.Button(result_window, text="Download PDF Report", command=self.download_pdf_report)
+        download_button = tk.Button(result_window, text="Download PDF Report", command=self.download_pdf_report,font=("Arial", 20))
         download_button.pack(pady=20)
 
     def download_pdf_report(self):
@@ -707,7 +551,12 @@ class MentalHealthDiagnosisApp:
                     c.drawString(140, y_position, symptom)
                     y_position -= 20
 
-        c.save
+        c.save()
+        # Get the current working directory
+    current_directory = os.getcwd()
+
+    # Print the current working directory
+    print("Current Working Directory:", current_directory)
 
 # Create the main application window
 root = tk.Tk()
